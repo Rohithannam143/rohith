@@ -16,7 +16,7 @@ const Hero = () => {
           <div className="space-y-8 animate-fade-in">
             <div className="inline-block">
               <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-                Full-Stack Developer
+                Engineering Student
               </span>
             </div>
             
@@ -26,7 +26,7 @@ const Hero = () => {
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-xl">
-              As a skilled full-stack developer, I am dedicated to turning ideas into innovative web applications. 
+              As a skilled Engineering Student, I am dedicated to turning ideas into innovative web applications. 
               Explore my latest projects and articles, showcasing my expertise in React.js and web development.
             </p>
 
@@ -73,6 +73,14 @@ const Hero = () => {
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/30"
               >
                 <Linkedin className="w-5 h-5" />
+              </a>
+               <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/30"
+              >
+                <Instagram className="w-5 h-5" />
               </a>
             </div>
           </div>

@@ -47,7 +47,7 @@ const Blog = () => {
           {blogPosts.map((post, index) => (
             <Card
               key={post.id}
-              className="group overflow-hidden bg-card border-border/50 hover:shadow-card transition-all duration-300 animate-fade-in"
+              className="group overflow-hidden bg-card border-border/50 hover:shadow-card hover:shadow-primary/20 hover:-translate-y-2 transition-all duration-300 animate-fade-in cursor-pointer"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative overflow-hidden h-48">
@@ -77,7 +77,7 @@ const Blog = () => {
                   {post.title}
                 </h3>
                 <p className="text-muted-foreground mb-4">{post.excerpt}</p>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                   Read More
                 </Button>
               </div>

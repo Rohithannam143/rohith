@@ -46,9 +46,9 @@ const Contact = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Info */}
           <div className="space-y-8 animate-slide-in-right">
-            <Card className="p-6 bg-card border-border/50 hover:shadow-card transition-all">
+            <Card className="p-6 bg-card border-border/50 hover:shadow-card hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-all">
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
                 <div>
@@ -63,9 +63,9 @@ const Contact = () => {
               </div>
             </Card>
 
-            <Card className="p-6 bg-card border-border/50 hover:shadow-card transition-all">
+            <Card className="p-6 bg-card border-border/50 hover:shadow-card hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-all">
                   <Phone className="w-6 h-6 text-primary" />
                 </div>
                 <div>
@@ -80,9 +80,9 @@ const Contact = () => {
               </div>
             </Card>
 
-            <Card className="p-6 bg-card border-border/50 hover:shadow-card transition-all">
+            <Card className="p-6 bg-card border-border/50 hover:shadow-card hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-all">
                   <MapPin className="w-6 h-6 text-primary" />
                 </div>
                 <div>
@@ -148,9 +148,9 @@ const Contact = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full" size="lg">
+              <Button type="submit" className="w-full group hover:shadow-lg hover:shadow-primary/30 transition-all duration-300" size="lg">
                 Send Message
-                <Send className="ml-2 w-4 h-4" />
+                <Send className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
           </Card>

@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Home, FileText, Briefcase, BookOpen } from 'lucide-react';
+import { LogOut, Home, FileText, Briefcase, BookOpen, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import AdminResume from './AdminResume';
+import AdminHero from './AdminHero';
 
 const Admin = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -55,8 +57,9 @@ const Admin = () => {
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="hero">Hero</TabsTrigger>
             <TabsTrigger value="resume">Resume</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
@@ -123,15 +126,14 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
+          {/* Hero Management */}
+          <TabsContent value="hero" className="space-y-6">
+            <AdminHero />
+          </TabsContent>
+
           {/* Resume Management */}
           <TabsContent value="resume" className="space-y-6">
-            <Card className="p-6 bg-card border-border/50">
-              <h2 className="text-xl font-bold mb-4">Resume Management</h2>
-              <p className="text-muted-foreground">
-                Manage your education, experience, skills, and certifications here.
-                Feature coming soon!
-              </p>
-            </Card>
+            <AdminResume />
           </TabsContent>
 
           {/* Projects Management */}

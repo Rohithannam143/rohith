@@ -1,6 +1,11 @@
 import { GraduationCap, Award, Code2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import certAiIntro from '@/assets/cert-ai-intro.png';
+import certGenAi from '@/assets/cert-gen-ai.png';
+import certSql from '@/assets/cert-sql.png';
+import certPython from '@/assets/cert-python.png';
 
 const Resume = () => {
   const education = [
@@ -25,10 +30,10 @@ const Resume = () => {
   ];
 
   const certifications = [
-    'Introduction to AI',
-    'Generative AI',
-    'SQL Database Management',
-    'Python Programming',
+    { name: 'Introduction to AI', image: certAiIntro },
+    { name: 'Generative AI', image: certGenAi },
+    { name: 'SQL Database Management', image: certSql },
+    { name: 'Python Programming', image: certPython },
   ];
 
   const skills = [
@@ -63,7 +68,7 @@ const Resume = () => {
             {education.map((edu, index) => (
               <Card
                 key={index}
-                className="p-6 bg-card border-l-4 border-l-primary hover:shadow-card transition-all duration-300 animate-slide-up"
+                className="p-6 bg-card border-l-4 border-l-primary hover:shadow-card hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 animate-slide-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
@@ -92,16 +97,33 @@ const Resume = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
             {certifications.map((cert, index) => (
-              <Card
-                key={index}
-                className="p-4 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card border-border/50 animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <p className="font-medium">{cert}</p>
-                </div>
-              </Card>
+              <Dialog key={index}>
+                <DialogTrigger asChild>
+                  <Card
+                    className="p-4 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card hover:scale-105 border-border/50 animate-fade-in cursor-pointer group"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-2 h-2 rounded-full bg-primary group-hover:animate-pulse" />
+                      <p className="font-medium group-hover:text-primary transition-colors">{cert.name}</p>
+                    </div>
+                    <div className="overflow-hidden rounded-lg">
+                      <img
+                        src={cert.image}
+                        alt={cert.name}
+                        className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                  </Card>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl">
+                  <img
+                    src={cert.image}
+                    alt={cert.name}
+                    className="w-full h-auto rounded-lg"
+                  />
+                </DialogContent>
+              </Dialog>
             ))}
           </div>
         </div>
@@ -126,7 +148,7 @@ const Resume = () => {
                   <span className="font-medium">{skill.name}</span>
                   <span className="text-primary">{skill.level}%</span>
                 </div>
-                <Progress value={skill.level} className="h-2" />
+                <Progress value={skill.level} className="h-2 transition-all duration-1000" />
               </div>
             ))}
           </div>

@@ -60,7 +60,7 @@ const Portfolio = () => {
               key={filter.id}
               variant={activeFilter === filter.id ? 'default' : 'outline'}
               onClick={() => setActiveFilter(filter.id)}
-              className="transition-all"
+              className="transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20"
             >
               {filter.label}
             </Button>
@@ -72,7 +72,7 @@ const Portfolio = () => {
           {filteredProjects.map((project, index) => (
             <Card
               key={project.id}
-              className="group overflow-hidden bg-card border-border/50 hover:shadow-card transition-all duration-300 animate-fade-in"
+              className="group overflow-hidden bg-card border-border/50 hover:shadow-card hover:shadow-primary/20 hover:-translate-y-2 transition-all duration-300 animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative overflow-hidden">

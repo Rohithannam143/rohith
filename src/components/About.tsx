@@ -98,11 +98,11 @@ const About = () => {
             {services.map((service, index) => (
               <Card
                 key={index}
-                className="p-6 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card hover:-translate-y-1 border-border/50 animate-fade-in"
+                className="p-6 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card hover:shadow-primary/20 hover:-translate-y-2 border-border/50 animate-fade-in group cursor-pointer"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <service.icon className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                  <service.icon className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
                 <h4 className="text-lg font-semibold mb-2">{service.title}</h4>
                 <p className="text-sm text-muted-foreground">{service.description}</p>

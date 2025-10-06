@@ -32,13 +32,13 @@ const Hero = () => {
 
             <div className="flex flex-wrap gap-4">
               <a href="#contact">
-                <Button size="lg" className="group">
+                <Button size="lg" className="group hover:shadow-lg hover:shadow-primary/30 transition-all duration-300">
                   Get In Touch
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </a>
               <a href="/Rohith_Resume.pdf" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-all duration-300">
                   View Resume
                 </Button>
               </a>
@@ -46,11 +46,11 @@ const Hero = () => {
 
             {/* Contact Info */}
             <div className="flex flex-wrap gap-6 pt-4">
-              <a href="tel:+919390140614" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="tel:+919390140614" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">
                 <Phone className="w-4 h-4" />
                 +91 9390140614
               </a>
-              <a href="mailto:annamrohith2@gmail.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:annamrohith2@gmail.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-all duration-300 hover:translate-x-1">
                 <Mail className="w-4 h-4" />
                 annamrohith2@gmail.com
               </a>
@@ -62,7 +62,7 @@ const Hero = () => {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
+                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/30"
               >
                 <Github className="w-5 h-5" />
               </a>
@@ -70,7 +70,7 @@ const Hero = () => {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
+                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/30"
               >
                 <Linkedin className="w-5 h-5" />
               </a>

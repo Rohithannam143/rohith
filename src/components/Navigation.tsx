@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThemeToggle from './ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,28 +59,32 @@ const Navigation = () => {
                 {link.name}
               </a>
             ))}
-            {isAuthenticated && (
-              <Link to="/admin">
-                <Button variant="outline" size="sm">
-                  <User className="w-4 h-4 mr-2" />
-                  Admin
-                </Button>
-              </Link>
-            )}
-            {!isAuthenticated && (
-              <Link to="/login">
-                <Button size="sm">Login</Button>
-              </Link>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
+            {isAuthenticated ? (
+              <Button variant="outline" size="sm" onClick={() => navigate('/admin')}>
+                <User className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
+            ) : (
+              <Button size="sm" onClick={() => navigate('/login')}>
+                Login
+              </Button>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="text-foreground"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}

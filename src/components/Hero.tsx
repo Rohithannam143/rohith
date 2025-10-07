@@ -1,4 +1,4 @@
-import { ArrowRight, Github, Linkedin, Mail, Phone } from 'lucide-react';
+import { ArrowRight, Github, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import heroPortrait from '@/assets/hero-portrait.jpg';
 

@@ -14,7 +14,222 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blog_posts: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string | null
+          excerpt: string
+          id: string
+          image_url: string | null
+          published_date: string | null
+          read_time: string | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          excerpt: string
+          id?: string
+          image_url?: string | null
+          published_date?: string | null
+          read_time?: string | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          excerpt?: string
+          id?: string
+          image_url?: string | null
+          published_date?: string | null
+          read_time?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      certifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          image_url: string
+          name: string
+          order_index: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image_url: string
+          name: string
+          order_index?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          name?: string
+          order_index?: number | null
+        }
+        Relationships: []
+      }
+      contact_info: {
+        Row: {
+          email: string
+          id: string
+          location: string
+          map_latitude: number | null
+          map_longitude: number | null
+          phone: string
+          updated_at: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          location: string
+          map_latitude?: number | null
+          map_longitude?: number | null
+          phone: string
+          updated_at?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          location?: string
+          map_latitude?: number | null
+          map_longitude?: number | null
+          phone?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      education: {
+        Row: {
+          created_at: string | null
+          degree: string
+          description: string | null
+          id: string
+          institution: string
+          order_index: number | null
+          year: string
+        }
+        Insert: {
+          created_at?: string | null
+          degree: string
+          description?: string | null
+          id?: string
+          institution: string
+          order_index?: number | null
+          year: string
+        }
+        Update: {
+          created_at?: string | null
+          degree?: string
+          description?: string | null
+          id?: string
+          institution?: string
+          order_index?: number | null
+          year?: string
+        }
+        Relationships: []
+      }
+      hero_section: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          image_url: string | null
+          subtitle: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          image_url?: string | null
+          subtitle: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          image_url?: string | null
+          subtitle?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          description: string
+          github_url: string | null
+          id: string
+          image_url: string | null
+          live_url: string | null
+          order_index: number | null
+          tags: string[] | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          description: string
+          github_url?: string | null
+          id?: string
+          image_url?: string | null
+          live_url?: string | null
+          order_index?: number | null
+          tags?: string[] | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          description?: string
+          github_url?: string | null
+          id?: string
+          image_url?: string | null
+          live_url?: string | null
+          order_index?: number | null
+          tags?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string | null
+          description: string
+          icon: string
+          id: string
+          order_index: number | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          icon: string
+          id?: string
+          order_index?: number | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          icon?: string
+          id?: string
+          order_index?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

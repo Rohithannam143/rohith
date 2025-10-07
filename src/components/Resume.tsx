@@ -1,40 +1,32 @@
+import { useState, useEffect } from 'react';
 import { GraduationCap, Award, Code2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import certAiIntro from '@/assets/cert-ai-intro.png';
-import certGenAi from '@/assets/cert-gen-ai.png';
-import certSql from '@/assets/cert-sql.png';
-import certPython from '@/assets/cert-python.png';
+import { supabase } from '@/lib/supabase';
 
 const Resume = () => {
-  const education = [
-    {
-      degree: 'B.Tech (Computer Science & Engineering)',
-      institution: 'University',
-      period: '2023 - Pursuing',
-      description: 'Courses included Data Structures, Algorithms, Computer Architecture, Operating Systems, and Software Engineering. Participated in consulting projects for startups.',
-    },
-    {
-      degree: 'Intermediate (MPC)',
-      institution: 'Govt Junior College, Kaipet',
-      period: '2021 - 2023',
-      description: 'Focused on Mathematics, Physics, and Chemistry with strong foundational knowledge.',
-    },
-    {
-      degree: 'SSC (Secondary School Certificate)',
-      institution: 'ZP High School, Dharmaraopet',
-      period: '2016 - 2021',
-      description: 'Completed secondary education with excellent grades.',
-    },
-  ];
+  const [education, setEducation] = useState<any[]>([]);
+  const [certifications, setCertifications] = useState<any[]>([]);
 
-  const certifications = [
-    { name: 'Introduction to AI', image: certAiIntro },
-    { name: 'Generative AI', image: certGenAi },
-    { name: 'SQL Database Management', image: certSql },
-    { name: 'Python Programming', image: certPython },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: eduData } = await supabase
+        .from('education')
+        .select('*')
+        .order('order_index', { ascending: true });
+      
+      const { data: certsData } = await supabase
+        .from('certifications')
+        .select('*')
+        .order('order_index', { ascending: true });
+      
+      if (eduData) setEducation(eduData);
+      if (certsData) setCertifications(certsData);
+    };
+    
+    fetchData();
+  }, []);
 
   const skills = [
     { name: 'React JS', level: 85 },
@@ -67,7 +59,7 @@ const Resume = () => {
           <div className="space-y-6">
             {education.map((edu, index) => (
               <Card
-                key={index}
+                key={edu.id}
                 className="p-6 bg-card border-l-4 border-l-primary hover:shadow-card hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 animate-slide-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -77,10 +69,10 @@ const Resume = () => {
                     <p className="text-primary font-medium">{edu.institution}</p>
                   </div>
                   <span className="text-sm text-muted-foreground mt-2 md:mt-0">
-                    {edu.period}
+                    {edu.year}
                   </span>
                 </div>
-                <p className="text-muted-foreground">{edu.description}</p>
+                {edu.description && <p className="text-muted-foreground">{edu.description}</p>}
               </Card>
             ))}
           </div>
@@ -97,7 +89,7 @@ const Resume = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
             {certifications.map((cert, index) => (
-              <Dialog key={index}>
+              <Dialog key={cert.id}>
                 <DialogTrigger asChild>
                   <Card
                     className="p-4 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card hover:scale-105 border-border/50 animate-fade-in cursor-pointer group"
@@ -109,7 +101,7 @@ const Resume = () => {
                     </div>
                     <div className="overflow-hidden rounded-lg">
                       <img
-                        src={cert.image}
+                        src={cert.image_url}
                         alt={cert.name}
                         className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-300"
                       />
@@ -118,7 +110,7 @@ const Resume = () => {
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl">
                   <img
-                    src={cert.image}
+                    src={cert.image_url}
                     alt={cert.name}
                     className="w-full h-auto rounded-lg"
                   />

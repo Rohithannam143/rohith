@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabase';
+import Map from './Map';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -13,6 +15,24 @@ const Contact = () => {
     email: '',
     message: '',
   });
+  const [contactInfo, setContactInfo] = useState({
+    email: 'rohithannam81215@gmail.com',
+    phone: '+91 9121549560',
+    location: 'Hyderabad, Telangana, India'
+  });
+
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      const { data } = await supabase
+        .from('contact_info')
+        .select('email, phone, location')
+        .single();
+      
+      if (data) setContactInfo(data);
+    };
+    
+    fetchContactInfo();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,12 +112,8 @@ const Contact = () => {
               </div>
             </Card>
 
-            {/* Map placeholder */}
-            <Card className="overflow-hidden border-border/50">
-              <div className="w-full h-64 bg-secondary/50 flex items-center justify-center">
-                <MapPin className="w-12 h-12 text-muted-foreground" />
-              </div>
-            </Card>
+            {/* Map */}
+            <Map />
           </div>
 
           {/* Contact Form */}

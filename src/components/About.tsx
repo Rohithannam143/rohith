@@ -1,30 +1,33 @@
+import { useEffect, useState } from 'react';
 import { Code, Database, Globe, Smartphone } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { supabase } from '@/lib/supabase';
 import profileAvatar from '@/assets/profile-avatar.jpg';
 
+const iconMap: { [key: string]: any } = {
+  'Globe': Globe,
+  'Code': Code,
+  'Database': Database,
+  'Smartphone': Smartphone,
+};
+
 const About = () => {
-  const services = [
-    {
-      icon: Globe,
-      title: 'Web Development',
-      description: 'Building high-quality, responsive websites using modern technologies like React.js and modern frameworks.',
-    },
-    {
-      icon: Code,
-      title: 'Frontend Development',
-      description: 'Creating beautiful and intuitive user interfaces with HTML, CSS, JavaScript, and React.',
-    },
-    {
-      icon: Database,
-      title: 'Backend Development',
-      description: 'Developing robust server-side applications with SQL databases and modern backend technologies.',
-    },
-    {
-      icon: Smartphone,
-      title: 'Problem Solving',
-      description: 'Implementing efficient algorithms and data structures to solve complex technical challenges.',
-    },
-  ];
+  const [services, setServices] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      const { data } = await supabase
+        .from('services')
+        .select('*')
+        .order('order_index', { ascending: true });
+      
+      if (data) {
+        setServices(data);
+      }
+    };
+    
+    fetchServices();
+  }, []);
 
   return (
     <section id="about" className="py-20 md:py-32 relative">
@@ -95,19 +98,22 @@ const About = () => {
             What I <span className="text-gradient">Do</span>
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => (
-              <Card
-                key={index}
-                className="p-6 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card hover:shadow-primary/20 hover:-translate-y-2 border-border/50 animate-fade-in group cursor-pointer"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
-                  <service.icon className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
-                </div>
-                <h4 className="text-lg font-semibold mb-2">{service.title}</h4>
-                <p className="text-sm text-muted-foreground">{service.description}</p>
-              </Card>
-            ))}
+            {services.map((service, index) => {
+              const IconComponent = iconMap[service.icon] || Code;
+              return (
+                <Card
+                  key={service.id}
+                  className="p-6 bg-card hover:bg-secondary/50 transition-all duration-300 hover:shadow-card hover:shadow-primary/20 hover:-translate-y-2 border-border/50 animate-fade-in group cursor-pointer"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                    <IconComponent className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
+                  </div>
+                  <h4 className="text-lg font-semibold mb-2">{service.title}</h4>
+                  <p className="text-sm text-muted-foreground">{service.description}</p>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </div>

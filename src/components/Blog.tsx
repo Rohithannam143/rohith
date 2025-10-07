@@ -1,37 +1,24 @@
+import { useEffect, useState } from 'react';
 import { Calendar, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/lib/supabase';
 
 const Blog = () => {
-  const blogPosts = [
-    {
-      id: 1,
-      title: 'Getting Started with React and TypeScript',
-      excerpt: 'Learn how to set up a modern React application with TypeScript, best practices, and essential tools.',
-      date: 'Feb 15, 2024',
-      readTime: '5 min read',
-      category: 'Development',
-      image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=400&fit=crop',
-    },
-    {
-      id: 2,
-      title: 'Building Real-Time Applications',
-      excerpt: 'Explore the world of real-time web applications using WebSockets and modern JavaScript frameworks.',
-      date: 'Feb 10, 2024',
-      readTime: '7 min read',
-      category: 'Tutorial',
-      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop',
-    },
-    {
-      id: 3,
-      title: 'The Future of Web Development',
-      excerpt: 'Discover emerging trends in web development including AI integration, serverless architecture, and more.',
-      date: 'Feb 5, 2024',
-      readTime: '6 min read',
-      category: 'Technology',
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop',
-    },
-  ];
+  const [blogPosts, setBlogPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      const { data } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .order('published_date', { ascending: false });
+      
+      if (data) setBlogPosts(data);
+    };
+    
+    fetchBlogPosts();
+  }, []);
 
   return (
     <section id="blog" className="py-20 md:py-32 bg-secondary/20">
@@ -52,7 +39,7 @@ const Blog = () => {
             >
               <div className="relative overflow-hidden h-48">
                 <img
-                  src={post.image}
+                  src={post.image_url || 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=400&fit=crop'}
                   alt={post.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
@@ -66,11 +53,11 @@ const Blog = () => {
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    {post.date}
+                    {new Date(post.published_date).toLocaleDateString()}
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {post.readTime}
+                    {post.read_time}
                   </div>
                 </div>
                 <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">

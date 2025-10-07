@@ -1,8 +1,41 @@
+import { useEffect, useState } from 'react';
 import { ArrowRight, Github, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/lib/supabase';
 import heroPortrait from '@/assets/hero-portrait.jpg';
 
 const Hero = () => {
+  const [heroData, setHeroData] = useState({
+    title: 'Turning Vision Into Reality With Code And Design.',
+    subtitle: 'Engineering Student',
+    description: 'As a skilled Engineering Student, I am dedicated to turning ideas into innovative web applications.',
+    image_url: heroPortrait
+  });
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      const { data } = await supabase
+        .from('hero_section')
+        .select('*')
+        .single();
+      
+      if (data) {
+        setHeroData({
+          title: data.title,
+          subtitle: data.subtitle,
+          description: data.description,
+          image_url: data.image_url || heroPortrait
+        });
+      }
+    };
+    
+    fetchHeroData();
+  }, []);
+
+  const displayImage = typeof heroData.image_url === 'string' && heroData.image_url.startsWith('http') 
+    ? heroData.image_url 
+    : heroPortrait;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background gradient effects */}
@@ -16,18 +49,16 @@ const Hero = () => {
           <div className="space-y-8 animate-fade-in">
             <div className="inline-block">
               <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-                Engineering Student
+                {heroData.subtitle}
               </span>
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              Turning Vision Into{' '}
-              <span className="text-gradient">Reality</span> With Code And Design.
+              {heroData.title}
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-xl">
-              As a skilled Engineering Student, I am dedicated to turning ideas into innovative web applications. 
-              Explore my latest projects and articles, showcasing my expertise in React.js and web development.
+              {heroData.description}
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -89,7 +120,7 @@ const Hero = () => {
           <div className="relative animate-slide-up">
             <div className="relative">
               <img
-                src={heroPortrait}
+                src={displayImage}
                 alt="Rohith Annam - Developer"
                 className="w-full h-auto rounded-2xl"
               />

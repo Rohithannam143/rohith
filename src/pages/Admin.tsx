@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Home, FileText, Briefcase, BookOpen, ImageIcon } from 'lucide-react';
+import { LogOut, Home, FileText, Briefcase, BookOpen, Users, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import AdminResume from './AdminResume';
 import AdminHero from './AdminHero';
+import AdminResume from './AdminResume';
+import AdminServices from './AdminServices';
+import AdminEducation from './AdminEducation';
+import AdminProjects from './AdminProjects';
+import AdminBlog from './AdminBlog';
+import AdminContact from './AdminContact';
 
 const Admin = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -57,12 +62,15 @@ const Admin = () => {
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 lg:w-auto lg:inline-grid">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="hero">Hero</TabsTrigger>
+            <TabsTrigger value="services">Services</TabsTrigger>
+            <TabsTrigger value="education">Education</TabsTrigger>
             <TabsTrigger value="resume">Resume</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="contact">Contact</TabsTrigger>
           </TabsList>
 
           {/* Overview */}
@@ -131,6 +139,16 @@ const Admin = () => {
             <AdminHero />
           </TabsContent>
 
+          {/* Services Management */}
+          <TabsContent value="services" className="space-y-6">
+            <AdminServices />
+          </TabsContent>
+
+          {/* Education Management */}
+          <TabsContent value="education" className="space-y-6">
+            <AdminEducation />
+          </TabsContent>
+
           {/* Resume Management */}
           <TabsContent value="resume" className="space-y-6">
             <AdminResume />
@@ -138,24 +156,17 @@ const Admin = () => {
 
           {/* Projects Management */}
           <TabsContent value="projects" className="space-y-6">
-            <Card className="p-6 bg-card border-border/50">
-              <h2 className="text-xl font-bold mb-4">Projects Management</h2>
-              <p className="text-muted-foreground">
-                Add, edit, or delete your portfolio projects here.
-                Feature coming soon!
-              </p>
-            </Card>
+            <AdminProjects />
           </TabsContent>
 
           {/* Blog Management */}
           <TabsContent value="blog" className="space-y-6">
-            <Card className="p-6 bg-card border-border/50">
-              <h2 className="text-xl font-bold mb-4">Blog Management</h2>
-              <p className="text-muted-foreground">
-                Create and manage your blog posts here.
-                Feature coming soon!
-              </p>
-            </Card>
+            <AdminBlog />
+          </TabsContent>
+
+          {/* Contact Management */}
+          <TabsContent value="contact" className="space-y-6">
+            <AdminContact />
           </TabsContent>
         </Tabs>
       </div>

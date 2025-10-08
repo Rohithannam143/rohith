@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,38 +6,109 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import heroPortrait from '@/assets/hero-portrait.jpg';
+import { supabase } from '@/lib/supabase';
 
 const AdminHero = () => {
   const { toast } = useToast();
   const [heroData, setHeroData] = useState({
-    title: 'Turning Vision Into Reality With Code And Design.',
-    subtitle: 'Full-Stack Developer',
-    description: 'As a skilled full-stack developer, I am dedicated to turning ideas into innovative web applications. Explore my latest projects and articles, showcasing my expertise in React.js and web development.',
-    image: heroPortrait,
+    id: '',
+    subtitle: '',
+    title: '',
+    description: '',
+    image_url: ''
   });
+  const [loading, setLoading] = useState(false);
 
-  const [tempImage, setTempImage] = useState('');
+  useEffect(() => {
+    fetchHeroData();
+  }, []);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setTempImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  const fetchHeroData = async () => {
+    const { data } = await supabase
+      .from('hero_section')
+      .select('*')
+      .single();
+    
+    if (data) {
+      setHeroData({
+        id: data.id,
+        subtitle: data.subtitle,
+        title: data.title,
+        description: data.description,
+        image_url: data.image_url || ''
+      });
     }
   };
 
-  const handleSave = () => {
-    if (tempImage) {
-      setHeroData({ ...heroData, image: tempImage });
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLoading(true);
+    
+    const fileExt = file.name.split('.').pop();
+    const fileName = `hero-${Date.now()}.${fileExt}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('portfolio-images')
+      .upload(fileName, file, { upsert: true });
+
+    if (uploadError) {
+      toast({
+        title: 'Error',
+        description: 'Failed to upload image',
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
     }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('portfolio-images')
+      .getPublicUrl(fileName);
+
+    setHeroData({ ...heroData, image_url: publicUrl });
+    setLoading(false);
+  };
+
+  const handleSave = async () => {
+    if (!heroData.subtitle || !heroData.title || !heroData.description) {
+      toast({
+        title: 'Error',
+        description: 'Please fill all required fields',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    const { error } = await supabase
+      .from('hero_section')
+      .update({
+        subtitle: heroData.subtitle,
+        title: heroData.title,
+        description: heroData.description,
+        image_url: heroData.image_url
+      })
+      .eq('id', heroData.id);
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+
     toast({
       title: 'Success',
       description: 'Hero section updated successfully',
     });
+    
+    setLoading(false);
   };
 
   return (
@@ -88,11 +159,13 @@ const AdminHero = () => {
                 className="mb-4"
               />
               <div className="relative">
-                <img
-                  src={tempImage || heroData.image}
-                  alt="Hero Preview"
-                  className="w-full h-64 object-cover rounded-lg border-2 border-primary/20"
-                />
+                {heroData.image_url && (
+                  <img
+                    src={heroData.image_url}
+                    alt="Hero Preview"
+                    className="w-full h-64 object-cover rounded-lg border-2 border-primary/20"
+                  />
+                )}
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 Upload a new image to replace the hero portrait
@@ -102,9 +175,9 @@ const AdminHero = () => {
         </div>
 
         <div className="flex justify-end mt-6">
-          <Button onClick={handleSave} size="lg">
+          <Button onClick={handleSave} size="lg" disabled={loading}>
             <Upload className="w-4 h-4 mr-2" />
-            Save Changes
+            {loading ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </Card>

@@ -1,29 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2, Upload, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import certAiIntro from '@/assets/cert-ai-intro.png';
-import certGenAi from '@/assets/cert-gen-ai.png';
-import certSql from '@/assets/cert-sql.png';
-import certPython from '@/assets/cert-python.png';
+import { supabase } from '@/lib/supabase';
+
+interface Certification {
+  id: string;
+  name: string;
+  image_url: string;
+}
 
 const AdminResume = () => {
   const { toast } = useToast();
-  const [certifications, setCertifications] = useState([
-    { id: 1, name: 'Introduction to AI', image: certAiIntro },
-    { id: 2, name: 'Generative AI', image: certGenAi },
-    { id: 3, name: 'SQL Database Management', image: certSql },
-    { id: 4, name: 'Python Programming', image: certPython },
-  ]);
-
-  const [newCert, setNewCert] = useState({ name: '', image: '' });
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [newCert, setNewCert] = useState({ name: '', image: null as File | null });
   const [isAdding, setIsAdding] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleAddCertification = () => {
+  useEffect(() => {
+    fetchCertifications();
+  }, []);
+
+  const fetchCertifications = async () => {
+    const { data } = await supabase
+      .from('certifications')
+      .select('*')
+      .order('order_index', { ascending: true });
+    
+    if (data) {
+      setCertifications(data);
+    }
+  };
+
+  const handleAddCertification = async () => {
     if (!newCert.name || !newCert.image) {
       toast({
         title: 'Error',
@@ -33,24 +45,76 @@ const AdminResume = () => {
       return;
     }
 
-    const newCertification = {
-      id: Date.now(),
-      name: newCert.name,
-      image: newCert.image,
-    };
+    setLoading(true);
 
-    setCertifications([...certifications, newCertification]);
-    setNewCert({ name: '', image: '' });
+    const fileExt = newCert.image.name.split('.').pop();
+    const fileName = `cert-${Date.now()}.${fileExt}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('portfolio-images')
+      .upload(fileName, newCert.image, { upsert: true });
+
+    if (uploadError) {
+      toast({
+        title: 'Error',
+        description: 'Failed to upload image',
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('portfolio-images')
+      .getPublicUrl(fileName);
+
+    const { error } = await supabase
+      .from('certifications')
+      .insert([
+        {
+          name: newCert.name,
+          image_url: publicUrl,
+          order_index: certifications.length
+        }
+      ]);
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+
+    setNewCert({ name: '', image: null });
     setIsAdding(false);
+    fetchCertifications();
     
     toast({
       title: 'Success',
       description: 'Certification added successfully',
     });
+    setLoading(false);
   };
 
-  const handleDeleteCertification = (id: number) => {
-    setCertifications(certifications.filter(cert => cert.id !== id));
+  const handleDeleteCertification = async (id: string) => {
+    const { error } = await supabase
+      .from('certifications')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    fetchCertifications();
     toast({
       title: 'Deleted',
       description: 'Certification removed successfully',
@@ -60,11 +124,7 @@ const AdminResume = () => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewCert({ ...newCert, image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+      setNewCert({ ...newCert, image: file });
     }
   };
 
@@ -94,25 +154,16 @@ const AdminResume = () => {
               </div>
               <div>
                 <Label htmlFor="cert-image">Certification Image</Label>
-                <div className="flex gap-4 items-center">
-                  <Input
-                    id="cert-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                  />
-                  {newCert.image && (
-                    <img
-                      src={newCert.image}
-                      alt="Preview"
-                      className="w-20 h-20 object-cover rounded border-2 border-primary"
-                    />
-                  )}
-                </div>
+                <Input
+                  id="cert-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
               </div>
-              <Button onClick={handleAddCertification} className="w-full">
+              <Button onClick={handleAddCertification} className="w-full" disabled={loading}>
                 <Upload className="w-4 h-4 mr-2" />
-                Add Certification
+                {loading ? 'Adding...' : 'Add Certification'}
               </Button>
             </div>
           </Card>
@@ -126,7 +177,7 @@ const AdminResume = () => {
             >
               <div className="relative">
                 <img
-                  src={cert.image}
+                  src={cert.image_url}
                   alt={cert.name}
                   className="w-full h-48 object-cover rounded-lg mb-3"
                 />

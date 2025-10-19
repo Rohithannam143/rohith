@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -72,7 +72,7 @@ const Navigation = () => {
 
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            {isAuthenticated ? (
+            {isAdmin ? (
               <Button variant="outline" size="sm" onClick={() => navigate('/admin')}>
                 <User className="w-4 h-4 mr-2" />
                 Admin
@@ -115,7 +115,7 @@ const Navigation = () => {
                 {link.name}
               </a>
             ))}
-            {isAuthenticated ? (
+            {isAdmin ? (
               <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="outline" size="sm" className="w-full">
                   <User className="w-4 h-4 mr-2" />

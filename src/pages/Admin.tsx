@@ -15,18 +15,18 @@ import AdminBlog from './AdminBlog';
 import AdminContact from './AdminContact';
 
 const Admin = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAdmin, logout, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!loading && !isAdmin) {
       navigate('/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAdmin, loading, navigate]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     toast({
       title: 'Logged Out',
       description: 'You have been successfully logged out.',
@@ -34,7 +34,7 @@ const Admin = () => {
     navigate('/');
   };
 
-  if (!isAuthenticated) {
+  if (loading || !isAdmin) {
     return null;
   }
 

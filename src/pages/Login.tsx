@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -8,17 +8,27 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { login, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already logged in as admin
+  useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin');
+    }
+  }, [isAdmin, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(username, password);
+    setLoading(true);
     
-    if (success) {
+    const { error } = await login(email, password);
+    
+    if (!error) {
       toast({
         title: 'Login Successful',
         description: 'Welcome to the admin dashboard!',
@@ -27,10 +37,12 @@ const Login = () => {
     } else {
       toast({
         title: 'Login Failed',
-        description: 'Invalid username or password',
+        description: error.message || 'Invalid email or password',
         variant: 'destructive',
       });
     }
+    
+    setLoading(false);
   };
 
   return (
@@ -46,16 +58,17 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium mb-2">
-              Username
+            <label htmlFor="email" className="block text-sm font-medium mb-2">
+              Email
             </label>
             <Input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               required
+              disabled={loading}
             />
           </div>
 
@@ -70,11 +83,12 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
               required
+              disabled={loading}
             />
           </div>
 
-          <Button type="submit" className="w-full" size="lg">
-            Login
+          <Button type="submit" className="w-full" size="lg" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
 

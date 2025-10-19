@@ -27,10 +27,12 @@ const Navigation = () => {
     { name: 'Portfolio', path: '/#portfolio' },
     { name: 'Blog', path: '/#blog' },
     { name: 'Contact', path: '/#contact' },
+    { name: 'Todos', path: '/todos' },
   ];
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
+    if (path === '/todos') return location.pathname === '/todos';
     return location.hash === path.replace('/', '');
   };
 

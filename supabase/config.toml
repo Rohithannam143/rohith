@@ -1,1 +1,4 @@
 project_id = "wuigdjblnareltaexfxm"
+
+[functions.ai-todo]
+verify_jwt = false
